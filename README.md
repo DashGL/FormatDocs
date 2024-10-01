@@ -1,55 +1,91 @@
-# Starlight Starter Kit: Basics
+# 3D Mesh, Texture, and Compression Formats for Retro Video Games
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+Welcome to the documentation for reverse-engineered 3D mesh, texture, and compression formats used in retro video games. This project aims to provide detailed, easy-to-follow documentation for these formats to help developers, researchers, and enthusiasts better understand and work with these assets.
 
+This site is built using [AstroJS](https://astro.build/) and [Starlight](https://starlight.astro.build/), ensuring fast, modern, and easy-to-navigate static documentation.
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Documentation Structure](#documentation-structure)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Introduction
+
+The purpose of this documentation is to share insights gained from reverse-engineering various 3D mesh, texture, and compression formats used in retro video game development. These formats were often proprietary and optimized for the hardware limitations of their time. Understanding them can be useful for game preservation, modding, and educational purposes.
+
+## Features
+
+- Detailed format specifications for various 3D mesh and texture formats used in retro games
+- Guides for reverse engineering and working with these formats
+- Examples and tools to help visualize the formats
+- Compression methods used in older games and how to decode them
+- Built with [AstroJS](https://astro.build/), offering a lightweight, fast, and static site
+- Powered by [Starlight](https://starlight.astro.build/) for documentation-friendly navigation
+
+## Getting Started
+
+To get started with this documentation locally, you'll need to have [Node.js](https://nodejs.org/) installed.
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/DashGL/FormatDocs.git
+cd FormatDocs
 ```
-npm create astro@latest -- --template starlight
+
+### Install Dependencies
+
+```bash
+npm install
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/starlight/tree/main/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/starlight/tree/main/examples/basics)
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/withastro/starlight&create_from_path=examples/basics)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fwithastro%2Fstarlight%2Ftree%2Fmain%2Fexamples%2Fbasics&project-name=my-starlight-docs&repository-name=my-starlight-docs)
+### Preview the Build
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro + Starlight project, you'll see the following folders and files:
-
-```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   ├── docs/
-│   │   └── config.ts
-│   └── env.d.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
+```bash
+npm run preview
 ```
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+### Deploying
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
+To deploy the documentation site, you can host it on platforms like GitHub Pages, Netlify, or Vercel.
 
-Static assets, like favicons, can be placed in the `public/` directory.
+- **Deploying to GitHub Pages**: Follow the [Astro guide](https://docs.astro.build/en/guides/deploy/github/) to deploy your site on GitHub Pages.
 
-## 🧞 Commands
+- **Deploying to Netlify**: Refer to the [Astro documentation](https://docs.astro.build/en/guides/deploy/netlify/) to deploy on Netlify.
 
-All commands are run from the root of the project, from a terminal:
+- **Deploying to Vercel**: Instructions for deploying on Vercel can be found [here](https://docs.astro.build/en/guides/deploy/vercel/).
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+### Documentation Structure
 
-## 👀 Want to learn more?
+The documentation is structured to be intuitive and easy to navigate:
 
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+- **Home**: Overview of the project and key concepts.
+- **Mesh Formats**: Detailed documentation of various 3D mesh formats.
+- **Texture Formats**: Specifications and examples of texture file formats.
+- **Compression Formats**: Methods used for data compression and decompression.
+- **Tools and Examples**: Code snippets and tools to help with reverse engineering and working with these formats.
+- **Contributors Guide**: Information on how to contribute to the project.
+
+### Contributing
+
+We welcome contributions from anyone interested in reverse-engineering retro video game formats. Whether it's improving the documentation, adding new formats, or developing new tools, your contributions are appreciated!
+
+#### How to Contribute
+
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature-branch`)
+3. Make your changes
+4. Commit your changes (`git commit -m 'Add new feature'`)
+5. Push to the branch (`git push origin feature-branch`)
+6. Open a pull request
+
+Please ensure your changes follow the project’s coding standards and are well-documented.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
