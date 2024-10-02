@@ -162,4 +162,111 @@ void readVertex(uint32_t dword, float* x, float* y, float* z) {
 
 ### Face Format
 
-Issue: https://github.com/kion-dgl/Miku-Legends-2/issues/12
+The face format is shared between triangles and quads. The `face_t` structure contains UV coordinates and vertex indices. Here’s how the data is laid out:
+
+```c
+typedef struct {
+    uint8_t au;
+    uint8_t av;
+    uint8_t bu;
+    uint8_t bv;
+    uint8_t cu;
+    uint8_t cv;
+    uint8_t du; // Unused for triangles
+    uint8_t dv; // Unused for triangles
+    uint32_t indices; // Encodes vertex indices and material information
+} face_t;
+```
+
+#### Field Details:
+
+- **UV Coordinates**: The first 8 bytes (au, av, bu, bv, cu, cv, du, dv) represent texture mapping coordinates. These UV values are 8-bit unsigned integers and reference pixels in a 256x256 texture space.
+  - For triangles, `du` and `dv` are unused.
+  - For quads, all UV values are used.
+
+- **Vertex Indices**: The `indices` field contains vertex indices and material information:
+  - **Bits 0–6**: Vertex index for `a`.
+  - **Bits 7–13**: Vertex index for `b`.
+  - **Bits 14–20**: Vertex index for `c`.
+  - **Bits 21–27**: Vertex index for `d` (unused for triangles).
+  - **Bits 28–29**: Material information, which can have one of four values:
+    - `0b00`: Megaman’s body texture.
+    - `0b01`: Megaman’s body texture with a different palette.
+    - `0b10`: Megaman’s face texture.
+    - `0b11`: Megaman’s face texture with a different palette (used for special weapons).
+
+#### UV Coordinate Conversion
+
+The UV coordinates are stored as integers but need to be converted to floating-point values for rendering. The texture space is 256x256, so the following formula converts the UVs to normalized floating-point values:
+
+```
+u_float = (u_int * 1/256) + 0.001953125
+v_float = (v_int * 1/256) + 0.001953125
+```
+
+#### Code Example
+
+```c
+#include <stdint.h>
+#include <stdio.h>
+
+#define PIXEL_TO_FLOAT_RATIO 0.00390625f
+#define PIXEL_ADJUSTMENT 0.001953125f
+#define FACE_MASK 0x7F
+
+// Structure to hold decoded face data
+typedef struct {
+    float u, v; // UV coordinates
+    uint8_t index; // Vertex index
+    uint8_t materialIndex; // Material information
+} Vertex;
+
+typedef struct {
+    Vertex a, b, c, d; // Vertices for a face
+    uint8_t isQuad; // 1 if quad, 0 if triangle
+} Face;
+
+// Function to decode UV coordinates and vertex indices from a face_t structure
+void readFace(const uint8_t* faceData, Face* face, uint8_t isQuad) {
+    // Read UV coordinates
+    uint8_t au = faceData[0], av = faceData[1];
+    uint8_t bu = faceData[2], bv = faceData[3];
+    uint8_t cu = faceData[4], cv = faceData[5];
+    uint8_t du = faceData[6], dv = faceData[7];
+
+    // Read indices and material information
+    uint32_t indices = *((uint32_t*)(faceData + 8));
+    uint8_t materialIndex = (indices >> 28) & 0x3;
+
+    uint8_t indexA = (indices >> 0) & FACE_MASK;
+    uint8_t indexB = (indices >> 7) & FACE_MASK;
+    uint8_t indexC = (indices >> 14) & FACE_MASK;
+    uint8_t indexD = (indices >> 21) & FACE_MASK;
+
+    // Store the decoded UV and index data in the Face struct
+    face->a.u = au * PIXEL_TO_FLOAT_RATIO + PIXEL_ADJUSTMENT;
+    face->a.v = av * PIXEL_TO_FLOAT_RATIO + PIXEL_ADJUSTMENT;
+    face->a.index = indexA;
+    face->a.materialIndex = materialIndex;
+
+    face->b.u = bu * PIXEL_TO_FLOAT_RATIO + PIXEL_ADJUSTMENT;
+    face->b.v = bv * PIXEL_TO_FLOAT_RATIO + PIXEL_ADJUSTMENT;
+    face->b.index = indexB;
+    face->b.materialIndex = materialIndex;
+
+    face->c.u = cu * PIXEL_TO_FLOAT_RATIO + PIXEL_ADJUSTMENT;
+    face->c.v = cv * PIXEL_TO_FLOAT_RATIO + PIXEL_ADJUSTMENT;
+    face->c.index = indexC;
+    face->c.materialIndex = materialIndex;
+
+    if (isQuad) {
+        face->isQuad = 1;
+        face->d.u = du * PIXEL_TO_FLOAT_RATIO + PIXEL_ADJUSTMENT;
+        face->d.v = dv * PIXEL_TO_FLOAT_RATIO + PIXEL_ADJUSTMENT;
+        face->d.index = indexD;
+        face->d.materialIndex = materialIndex;
+    } else {
+        face->isQuad = 0;
+    }
+}
+```
