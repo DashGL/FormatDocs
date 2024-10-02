@@ -1,0 +1,15 @@
+---
+import MermaidDiagram from '../components/MermaidDiagram.astro';
+---
+
+<html>
+  <body>
+    <MermaidDiagram chart={`
+      graph TD;
+        A-->B;
+        A-->C;
+        B-->D;
+        C-->D;
+    `} />
+  </body>
+</html>

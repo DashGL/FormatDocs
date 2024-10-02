@@ -1,0 +1,27 @@
+---
+const { chart } = Astro.props;
+---
+
+<div class="mermaid">
+  {chart}
+</div>
+
+<script>
+  import mermaid from 'mermaid';
+
+  mermaid.initialize({
+    startOnLoad: true,
+  });
+
+  // Ensure Mermaid renders the chart after the page loads
+  document.addEventListener('astro:load', () => {
+    mermaid.contentLoaded();
+  });
+</script>
+
+<style>
+  .mermaid {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+</style>

@@ -1,0 +1,19 @@
+---
+export type Props = {
+  lang: string;
+  lastUpdated: Date;
+}
+
+const { lang, lastUpdated } = Astro.props;
+---
+
+{
+	lastUpdated && (
+		<p>
+			{Astro.locals.t('page.lastUpdated')}{' '}
+			<time datetime={lastUpdated.toISOString()}>
+				{lastUpdated.toLocaleDateString(lang, { dateStyle: 'medium', timeZone: 'UTC' })}
+			</time>
+		</p>
+	)
+}
