@@ -5,8 +5,6 @@ description: A description of the mesh format used for the player character
 
 import MermaidDiagram from '@components/MermaidDiagram.astro';
 
-## MegaMan Model
-
 There is a separate model of MegaMan depending on the equipment.
 The options for this are if a helmet is equipped or not, and if the shoes are jet, cleat, asbestos, or hover.
 What this means is that most of the information in the model is duplicated, with the exception of the helmet and shoes.
@@ -60,8 +58,8 @@ typedef struct {
     uint32_t triOffset;
     uint32_t quadOffset;
     uint32_t vertexOffset;
-    utin32_t triShadowOffset;
-    utin32_t quadShadowOffset;
+    utin32_t activeVertexColors;
+    utin32_t referenceVertexColors;
 } StripHeader;
 ```
 
@@ -71,13 +69,96 @@ typedef struct {
 
 ### Vertex Format
 
-<MermaidDiagram chart={`
-  graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
-`} />
+Each vertex is encoded in a 32-bit word (`uint32_t`) which is split into different bit segments for the X, Y, and Z coordinates, as well as scale data:
+
+- **32-bit word format:**
+  - **X-axis**: The lowest 10 bits (bits 0–9).
+  - **Y-axis**: The next 10 bits (bits 10–19).
+  - **Z-axis**: The following 10 bits (bits 20–29).
+  - **Scale**: The highest 2 bits (bits 30–31), which encode scaling information.
+
+#### Scale Encoding
+
+The two highest bits (30–31) represent scale data, which determines how much to scale the X, Y, and Z coordinates:
+- `0b00`: 1x scale (no scaling).
+- `0b01`: 2x scale.
+- `0b10`: 4x scale.
+- `0b11`: 0.5x scale.
+
+#### Coordinate Representation
+
+Each axis (X, Y, Z) is represented as a signed 10-bit integer:
+- **Sign Bit**: The most significant bit (MSB) of each axis segment indicates the sign (negative if set).
+- **Magnitude**: The remaining 9 bits represent the magnitude of the value.
+
+#### PSX Coordinate System
+
+The PSX coordinate system uses a convention where **-Y is up**. To align with this, the vertices are rotated by 180 degrees along the X-axis. Additionally, the PSX does not support floating-point values, so we scale down the vertices to bring them closer to real-world units, like meters.
+
+#### Code Example
+
+The following C code demonstrates how to decode the vertex data from a 32-bit word:
+
+```c
+#include <stdint.h>
+#include <math.h>
+#include <stdio.h>
+
+#define SCALE 0.00125
+
+// Function to read a vertex from a 32-bit encoded integer
+void readVertex(uint32_t dword, float* x, float* y, float* z) {
+    const uint32_t VERTEX_MASK = 0b1111111111;
+    const uint32_t VERTEX_MSB = 0b1000000000;
+    const uint32_t VERTEX_LOW = 0b0111111111;
+
+    // Extract X, Y, Z using bit shifts and masks
+    int32_t xBytes = (dword >> 0x00) & VERTEX_MASK;
+    int32_t yBytes = (dword >> 0x0a) & VERTEX_MASK;
+    int32_t zBytes = (dword >> 0x14) & VERTEX_MASK;
+
+    // Apply sign to X, Y, Z
+    int32_t xSign = (xBytes & VERTEX_MSB) ? -1 : 1;
+    int32_t xValue = (xBytes & VERTEX_LOW);
+
+    int32_t ySign = (yBytes & VERTEX_MSB) ? -1 : 1;
+    int32_t yValue = (yBytes & VERTEX_LOW);
+
+    int32_t zSign = (zBytes & VERTEX_MSB) ? -1 : 1;
+    int32_t zValue = (zBytes & VERTEX_LOW);
+
+    // Extract scale from the top 2 bits (30 and 31)
+    uint32_t scaleBits = (dword >> 30) & 0b11;
+    float scale = 1.0;
+    switch (scaleBits) {
+        case 0b00:
+            scale = 1.0;
+            break;
+        case 0b01:
+            scale = 2.0;
+            break;
+        case 0b10:
+            scale = 4.0;
+            break;
+        case 0b11:
+            scale = 0.5;
+            break;
+    }
+
+    // Combine high and low parts for each axis
+    *x = (xSign * xValue) * scale;
+    *y = (ySign * yValue) * scale;
+    *z = (zSign * zValue) * scale;
+
+    // Apply final scaling to make units closer to meters
+    *x *= SCALE;
+    *y *= SCALE;
+    *z *= SCALE;
+
+    // Rotate by 180 degrees across the X-axis to match PSX format (-Y is up)
+    *y = -*y; // Flip Y
+}
+```
 
 ### Face Format
 
