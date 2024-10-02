@@ -13,16 +13,12 @@ export default defineConfig({
       },
       sidebar: [
         {
-          label: "MegaMan Legends 2",
-          // Autogenerate a group of links for the 'constellations' directory.
-          autogenerate: { directory: "mml2" },
+          label: "Guides",
+          autogenerate: { directory: "guides" },
         },
         {
-          label: "Guides",
-          items: [
-            // Each item here is one entry in the navigation menu.
-            { label: "Example Guide", slug: "guides/example" },
-          ],
+          label: "MegaMan Legends 2",
+          autogenerate: { directory: "mml2" },
         },
         {
           label: "Reference",
