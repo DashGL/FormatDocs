@@ -35,22 +35,22 @@ The `DAT` folder is structured around scenes in the game. Each scene is broken i
   - Each act contains specific models and textures for that scene.
   - **Duplicated Assets**: Meshes and textures are often duplicated between acts to allow the game to load data sequentially into memory, avoiding issues with limited RAM on the PSX.
 
-  ## File Format Documentation
+## File Format Documentation
 
-  ### Mesh Formats
-  The mesh format used for 3D models in MegaMan Legends typically follows this structure:
-  - **PBD** Mesh Data for the player character
-  - **EBD** Mesh Data for the scene entities
+### Mesh Formats
+The mesh format used for 3D models in MegaMan Legends typically follows this structure:
+- **PBD** Mesh Data for the player character
+- **EBD** Mesh Data for the scene entities
 
-  ### Texture Formats
-  Textures are stored as compressed images. The compression algorithm used on the PSX version is unique to the hardware, requiring custom decompression scripts.
+### Texture Formats
+Textures are stored as compressed images. The compression algorithm used on the PSX version is unique to the hardware, requiring custom decompression scripts.
 
-  - **TIM** Texture format for the PlayStation, uses the same elements packed differently
-    - Image + Palette compressed
-    - Image + Palette uncompressed
-    - Image Compressed
-    - Palette Only Uncompressed
+- **TIM** Texture format for the PlayStation, uses the same elements packed differently
+  - Image + Palette compressed
+  - Image + Palette uncompressed
+  - Image Compressed
+  - Palette Only Uncompressed
 
-  ### Compression Formats
-  The game uses a variety of compression techniques to store data efficiently on the disc. Some of these include:
-  - **LZ77r Compression**: Modified version of an LZ77 with a fixed `0x2000` byte window size
+### Compression Formats
+The game uses a variety of compression techniques to store data efficiently on the disc. Some of these include:
+- **LZ77r Compression**: Modified version of an LZ77 with a fixed `0x2000` byte window size
