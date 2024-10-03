@@ -32,6 +32,45 @@ The recommended emulators for memory analysis are:
 ## Files
 Modifying the game files is a more direct approach to updating assets, models, textures, and even scripts in **PlayStation Games**. The following section outlines how to extract, modify, and rebuild the game files.
 
+### Install mkpsxiso
+
+Install dependencies
+```bash
+sudo apt update
+sudo apt install build-essential cmake libpng-dev zlib1g-dev libxml2-dev
+```
+
+First, clone the mkpsxiso repository from GitHub:
+
+```bash
+git clone https://github.com/Lameguy64/mkpsxiso.git
+cd mkpsxiso
+git submodule update --init --recursive
+```
+
+Create a build directory and configure the build using CMake:
+
+```bash
+mkdir build
+cd build
+cmake ..
+```
+
+Compile mkpsxiso using make:
+```
+make
+```
+
+To install mkpsxiso system-wide (optional), run the following command:
+```bash
+sudo make install
+```
+
+To verify the installation, run the following command:
+```bash
+./mkpsxiso --help
+```
+
 ### Steps for Modifying Game Files
 
 1. **Dump the Game Files**:
