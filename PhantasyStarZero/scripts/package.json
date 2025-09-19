@@ -1,0 +1,30 @@
+{
+  "name": "psz-asset-extractor",
+  "version": "1.0.0",
+  "description": "Asset extraction tools for Phantasy Star Zero (Nintendo DS)",
+  "main": "index.js",
+  "scripts": {
+    "decompress": "npx ts-node zpr-decompress.ts",
+    "extract": "npx ts-node batch-extract.ts",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "keywords": [
+    "phantasy-star",
+    "nintendo-ds",
+    "game-assets",
+    "extraction",
+    "zpr",
+    "narc"
+  ],
+  "author": "PSZ Research Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
